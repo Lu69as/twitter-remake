@@ -1,0 +1,21 @@
+drop table if exists posts;
+drop table if exists users;
+
+create table users (
+	userId char(30) primary key not null,
+	password char(40),
+	userName char(30),
+	description char(255),
+	profilePic char(255)
+);
+
+create table posts (
+	postId int primary key not null auto_increment,
+	text text,
+	posted datetime DEFAULT CURRENT_TIMESTAMP,
+	userId char(30),
+	foreign key (userId) references users(userId)
+);
+
+insert into users values ( 'lu69as', 'Pass123', 'Lukas Okkenhauger', 'En yngre gutt', 'https://static.wikia.nocookie.net/unanything/images/4/4b/Redditor.webp' );
+insert into posts (text, userId) values ( 'En helt ny postingmetode', 'lu69as' );

@@ -10,12 +10,15 @@ html { scroll-behavior: smooth; }
     --secondary: #357c5b;
     --accent: #52b69d;
 
+    --body-bg: #141317;
     --post-bg: #1e1c24;
     --post-border: #383442;
+    --btn-clr: #3d394a;
 }
 
 * {
     margin: 0;
+    transition: 200ms;
     font-family: var(--body-font);
     color: #e9f6e9;
 }
@@ -26,7 +29,7 @@ body {
     overflow-x: hidden;
     padding: 35px;
     /* background: url("./img/blobs-bg.svg"); */
-    background: #141317;
+    background: var(--body-bg);
 
     display: flex;
     justify-content: center;
@@ -34,8 +37,86 @@ body {
 }
 
 section.mainWidget {
-    width: 30%;
+    width: 700px;
     position: relative;
+
+    .login_select {
+        .login_tabs {
+            display: flex;
+
+            div {
+                background: var(--post-bg);
+                width: 100%;
+                text-align: center;
+                cursor: pointer;
+                padding: 20px;
+                border: solid 1px var(--post-border);
+                
+                font-size: 20px;
+                font-weight: 900;
+                font-family: var(--header-font);
+            }
+            .sign_up {
+                border-radius: 10px 0 0;
+                border-right: none;
+            }
+            .log_in { border-radius: 0 10px 0 0; }
+        }
+        form {
+            background: var(--post-bg);
+            border: solid 1px var(--post-border);
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            padding: 20px;
+
+            > div {
+                display: flex;
+                gap: 15px;
+                position: relative;
+
+                div { width: 100%; }
+            }
+            
+            input, textarea {
+                max-width: calc(100% - 20px);
+                min-width: calc(100% - 20px);
+                background: var(--body-bg);
+                border: none;
+                border-radius: 10px;
+                border: solid 1px var(--post-border);
+                padding: 5px 10px;
+            }
+            :is(input, textarea):focus-visible { outline: none; }
+            textarea {
+                min-height: 40px;
+                max-height: 40px;
+            }
+            
+            > :not(button) { margin-bottom: 10px; }
+            label {
+                margin-bottom: 5px;
+                margin-left: 5px;
+                display: inline-block;
+                font-weight: 600
+            }
+
+            button {
+                padding: 10px 15px;
+                border: solid 1px var(--post-border);
+                background: var(--btn-clr);
+                border-radius: 10px;
+                cursor: pointer;
+                font-size: 18px;
+                font-weight: bold;
+            }
+            button.invalid {
+                opacity: .6;
+                pointer-events: none;
+                cursor: none;
+            }
+        }
+        form:has(input[required]:invalid) button { opacity: .6; }
+    }
 
     .post_creator {
         form {
@@ -47,7 +128,6 @@ section.mainWidget {
             .profile {
                 height: 46px;
                 aspect-ratio: 1;
-                background-image: url("./img/temp-pfp.jpg");
                 background-position: center center;
                 background-size: cover;
                 border-radius: 9em;
