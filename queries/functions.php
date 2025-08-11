@@ -8,7 +8,28 @@
             }
         }
         return $conn;
-    } 
+    }
+
+    function timeAgo($dateString) {
+        $diff = time() - strtotime($dateString);
+        if ($diff < 0) return "In the future";
+
+        $units = [
+            31536000 => "year",
+            2592000  => "month",
+            86400    => "day",
+            3600     => "hour",
+            60       => "minute",
+            1        => "second"
+        ];
+
+        foreach ($units as $seconds => $name) {
+            if ($diff >= $seconds) {
+                $value = floor($diff / $seconds);
+                return $value . " {$name}" . ($value > 1 ? "s" : "") . " ago";
+            }
+        }
+    }
     
     function addPostsHtml($query) {
         $connInner = getDBConnection();
@@ -21,8 +42,8 @@
                     <div class="content">
                         <p class="user">
                             <span class="userName">'.$row["userName"].'</span>
-                            <span class="userId">'.$row["userId"].'</span>
-                            <span class="date">'.$row["posted"].'</span>
+                            <span class="userId">@'.$row["userId"].'</span>
+                            <span class="date"> • '.timeAgo($row["posted"]).'</span>
                         </p>
                         <p class="text">'.str_replace("\n", "<br>", $row["text"]).'</p>
                     </div>
@@ -31,3 +52,4 @@
         } else { $output = "0 results"; }
         return $output;
     }
+

@@ -198,8 +198,6 @@ section.mainWidget {
 
                     .userName { font-weight: 900; }
                     .userId, .date { opacity: .5; }
-                    .userId::before { content: "@"; }
-                    .date::before { content: "• "; font-size: 10px; }
                 }
             }
         }

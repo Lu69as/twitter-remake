@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../style.css">
+    <link rel="icon" type="image/x-icon" href="../img/logo.png">
     <?php
-        require_once "../queries/db-connect.php";
+        require_once "../queries/functions.php";
         $conn = getDBConnection();
 
         $queries = array();
@@ -29,7 +30,7 @@
                 $createdDate = date_parse($row["created"]);
                 echo '<div class="profilePage">
                     <div class="pfp" style="background-image:url('. $row["profilePic"] .')"></div>
-                    <h1 class="userName">'. $row["userName"] .'<span class="userId"> • '. $pageUser .'</span></h1>
+                    <h1 class="userName">'. $row["userName"] .'<span class="userId"> • @'. $pageUser .'</span></h1>
                     <h3 class="userCreated">Started Blobbing™️<span>'. date("F", strtotime($row["created"]))
                         .' '. date("Y", strtotime($row["created"])) .'</span></h3>
                     <p class="description">'. $row["description"] .'</p>
@@ -39,7 +40,7 @@
 
         <div class="posts"><?php
             echo addPostsHtml("SELECT posts.postId, posts.text, posts.posted, posts.userId, users.userName, users.profilePic
-                FROM posts JOIN users ON posts.userId = users.userId WHERE users.userId = '" . $pageUser . "';");
+                FROM posts JOIN users ON posts.userId = users.userId WHERE users.userId = '" . $pageUser . "' order by posted desc;");
         ?></div>
 
         <?php

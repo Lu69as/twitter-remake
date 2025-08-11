@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./style.css">
+    <link rel="icon" type="image/x-icon" href="./img/logo.png">
     <title>Blob</title>
 </head>
 <?php
-    require_once "./queries/db-connect.php";
+    require_once "./queries/functions.php";
     $conn = getDBConnection();
-    // setcookie("user", "", time() - (86400 * 12), "/");
 ?>
 <body>
     <section class="mainWidget">
@@ -65,7 +65,7 @@
 
         <div class="posts"><?php
             echo addPostsHtml("SELECT posts.postId, posts.text, posts.posted, posts.userId, users.userName, users.profilePic
-                FROM posts JOIN users ON posts.userId = users.userId;");
+                FROM posts JOIN users ON posts.userId = users.userId order by posted desc;");
         ?></div>
     </section>
     <script src="./script.js"></script>
