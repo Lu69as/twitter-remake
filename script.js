@@ -28,6 +28,11 @@ window.addEventListener("load", () => {
             e.style.opacity = "1"; s.style.opacity = ".7";
             document.querySelector("form."+ s.classList[0]).style.display = "none";
             document.querySelector("form."+ e.classList[0]).style.display = "block";
-        })
-    })
+        });
+    });
+
+    document.querySelectorAll(".btn1.delete").forEach((e) => { e.addEventListener("click", (evt) => {
+        if (!confirm("You are about to delete your Blob account \nAre you sure you want to leave us?"))
+            evt.preventDefault();
+    })})
 })
