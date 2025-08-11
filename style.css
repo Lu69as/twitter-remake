@@ -205,6 +205,54 @@ section.mainWidget {
         .post + .post { padding-top: 0; }
         .post:has(+ .post) { border-bottom: solid 1px var(--post-border); }
     }
+
+    .profilePage {
+        margin-top: 50px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        overflow: visible !important;
+
+        border: solid 1px var(--post-border);
+        background: var(--post-bg);
+        border-radius: 10px;
+        width: calc(100% - 0px);
+        overflow: hidden;
+
+
+        .pfp {
+            margin-top: -70px;
+            width: 160px;
+            border-radius: 9em;
+            border: solid 1px var(--post-border);
+            aspect-ratio: 1;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .userName {
+            font-size: 42px;
+            font-family: var(--header-font);
+            font-weight: 800;
+
+            .userId {
+                opacity: .5;
+                font-size: 24px;
+                font-family: var(--body-font);
+                font-weight: 400;
+                transform: translate(10px, -3px);
+                display: inline-block;
+            }
+        }
+        .userCreated {
+            opacity: .8;
+            font-weight: 500;
+            margin-top: -5px;
+
+            span { font-weight: 900; }
+        }
+    }
 }
 
 @media (max-width: 1050px) {

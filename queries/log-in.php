@@ -3,16 +3,19 @@
     $conn = getDBConnection();
 
     if (empty($_POST['log_in_formType'])) {
-        $query = "insert into users values ('". $_POST['userId'] ."','". $_POST['password'] ."','". $_POST['userName'] ."','". 
-            (strlen($_POST['desc']) > 0 ? $_POST['desc'] : 'Beskrivelser er vanskelige...') ."','".
-            (strlen($_POST['profilePic']) > 0 ? $_POST['profilePic'] : __DIR__ . "/img/Default_pfp.svg") ."')";
-    
-        if ($conn->query($query) === true) {
+        try {
+            $dsc = strlen($_POST['desc']) > 0 ? $_POST['desc'] : 'Descriptions are hard...';
+            $pfp = strlen($_POST['profilePic']) > 0 ? $_POST['profilePic'] : __DIR__ . "/img/Default_pfp.svg";
+
+            $stmt = $conn->prepare("INSERT INTO users (userId, password, userName, description, profilePic) VALUES (?,?,?,?,?)");
+            $stmt->bind_param("sssss", $_POST['userId'], $_POST['password'], $_POST['userName'], $dsc, $pfp);
+            $stmt->execute(); $stmt->close();
             setcookie("user", $_POST['userId'], time() + (86400 * 12), "/");
             header("Location: {$_SERVER['HTTP_REFERER']}");
         }
-        else {
-            echo "Error: " . $query . "<br>" . $conn->error;
+        catch (mysqli_sql_exception $e) {
+            error_log($e->getMessage());
+            echo "Something went wrong." . $e->getMessage();
             echo '<br><a href="'.$_SERVER['HTTP_REFERER'].'">Return to homepage</a>';
         }
     }

@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Twitter Remake</title>
+    <link rel="stylesheet" href="./style.css">
+    <title>Blob</title>
 </head>
 <?php
-    require_once __DIR__ . "/queries/db-connect.php";
+    require_once "./queries/db-connect.php";
     $conn = getDBConnection();
-
-    // setcookie("user", "lu69as", time() - (86400 * 12), "/");
+    // setcookie("user", "", time() - (86400 * 12), "/");
 ?>
 <body>
     <section class="mainWidget">
@@ -54,7 +53,7 @@
 
                 echo '<div class="post_creator">
                     <form action="./queries/add-post.php" method="post">
-                        <a href="./profile/" class="profile" style="background-image:url('. $activeUserPFPResult->fetch_assoc()["profilePic"] .')"></a>
+                        <a href="./profile/?user='.$_COOKIE["user"].'" class="profile" style="background-image:url('. $activeUserPFPResult->fetch_assoc()["profilePic"] .')"></a>
                         <input type="hidden" name="postuser" id="postuser" value="'. $_COOKIE["user"] .'">
                         <textarea name="textpost" id="textpost" maxlength="255"></textarea>
                         <button type="submit">Post</button>
@@ -72,7 +71,7 @@
             if ($mainPostsResult->num_rows > 0) {
                 while($row = $mainPostsResult->fetch_assoc()) {
                     echo '<div class="post" id="'.$row["postId"].'">
-                        <div class="profile_pic" style="background-image:url('.$row["profilePic"].')"></div>
+                        <a class="profile_pic" href="./profile/?user='.$row["userId"].'" style="background-image:url('.$row["profilePic"].')"></a>
                         <div class="content">
                             <p class="user">
                                 <span class="userName">'.$row["userName"].'</span>
