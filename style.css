@@ -41,6 +41,7 @@ section.mainWidget {
     position: relative;
 
     .login_select {
+        .userId_list { display: none !important; }
         .login_tabs {
             display: flex;
 
