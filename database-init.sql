@@ -1,3 +1,4 @@
+drop table if exists likes;
 drop table if exists posts;
 drop table if exists users;
 
@@ -6,7 +7,8 @@ create table users (
 	password char(40),
 	userName char(30),
 	description char(255),
-	profilePic char(255)
+	profilePic char(255),
+	created datetime DEFAULT CURRENT_TIMESTAMP
 );
 
 create table posts (
@@ -17,5 +19,15 @@ create table posts (
 	foreign key (userId) references users(userId)
 );
 
-insert into users values ( 'lu69as', 'Pass123', 'Lukas Okkenhauger', 'En yngre gutt', 'https://static.wikia.nocookie.net/unanything/images/4/4b/Redditor.webp' );
+create table likes (
+	postId int,
+	userId char(30),
+	foreign key (postId) references posts(postId),
+	foreign key (userId) references users(userId)
+);
+
+insert into users (userId, password, userName, description, profilePic) values 
+	( 'lu69as', 'Pass123', 'Lukas Okkenhauger', 'En yngre gutt', 'https://static.wikia.nocookie.net/unanything/images/4/4b/Redditor.webp' ),
+	( 'lokas', 'Pass123', 'Ich bin mich', 'En yngre gutt', 'https://static.wikia.nocookie.net/unanything/images/4/4b/Redditor.webp' );
 insert into posts (text, userId) values ( 'En helt ny postingmetode', 'lu69as' );
+insert into likes values ( 1, 'lu69as' ), ( 1, 'lokas' )

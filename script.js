@@ -22,17 +22,23 @@ window.addEventListener("load", () => {
         });
     });
 
-    document.querySelectorAll(".login_tabs > div").forEach((e) => {
-        e.addEventListener("click", () => {
-            let s = document.querySelector(".login_tabs div:not(."+ e.classList[0] +")");
-            e.style.opacity = "1"; s.style.opacity = ".7";
-            document.querySelector("form."+ s.classList[0]).style.display = "none";
-            document.querySelector("form."+ e.classList[0]).style.display = "block";
+    document.querySelectorAll('.sorting [data-sort]').forEach((e) => {
+        e.addEventListener('click', () => {
+            const params = new URLSearchParams(window.location.search);
+            params.set('sort', e.dataset.sort); // add or replace sort
+            window.location.search = params.toString(); // reload with updated query
         });
     });
+
+    document.querySelectorAll(".login_tabs > div").forEach((e) => { e.addEventListener("click", () => {
+        let s = document.querySelector(".login_tabs div:not(."+ e.classList[0] +")");
+        e.style.opacity = "1"; s.style.opacity = ".7";
+        document.querySelector("form."+ s.classList[0]).style.display = "none";
+        document.querySelector("form."+ e.classList[0]).style.display = "block";
+    })});
 
     document.querySelectorAll(".btn1.delete").forEach((e) => { e.addEventListener("click", (evt) => {
         if (!confirm("You are about to delete your Blob account \nAre you sure you want to leave us?"))
             evt.preventDefault();
-    })})
+    })});
 })

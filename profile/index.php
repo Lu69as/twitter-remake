@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" sizes="180x180" href="../img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="../img/favicon/site.webmanifest">
     <link rel="stylesheet" href="../style.css">
-    <link rel="icon" type="image/x-icon" href="../img/logo.png">
     <?php
         require_once "../queries/functions.php";
         $conn = getDBConnection();
@@ -12,9 +15,22 @@
         $queries = array();
         parse_str($_SERVER['QUERY_STRING'], $queries);
 
-        if (!isset($_COOKIE["user"]) && count($queries) < 1) header("Location: ../");
-        $pageUser = count($queries) >= 1 ? $queries["user"] : $_COOKIE["user"];
+        if (!isset($_COOKIE["user"]) && !isset($queries["user"])) header("Location: ../");
+        $pageUser = isset($queries["user"]) ? $queries["user"] : $_COOKIE["user"];
         
+        if(isset($_POST['log_out'])) {
+            setcookie("user", "", time() - (86400 * 12), "/");
+            header("Location: ../");
+            exit;
+        };
+        if(isset($_POST['delete_user'])) {
+            $conn->query("DELETE FROM likes WHERE postId IN (SELECT postId FROM posts WHERE userId='".$pageUser."') or userId='".$pageUser."';");
+            $conn->query("DELETE from posts where userId = '". $pageUser ."';");
+            $conn->query("DELETE from users where userId = '". $pageUser ."';");
+            setcookie("user", "", time() - (86400 * 12), "/");
+            header("Location: ../");
+            exit;
+        };
     ?>
     <title><?php echo $pageUser ?></title>
 </head>
@@ -35,31 +51,36 @@
                         .' '. date("Y", strtotime($row["created"])) .'</span></h3>
                     <p class="description">'. $row["description"] .'</p>
                 </div>';
-            }; 
+            };
         ?>
 
-        <div class="posts"><?php
-            echo addPostsHtml("SELECT posts.postId, posts.text, posts.posted, posts.userId, users.userName, users.profilePic
-                FROM posts JOIN users ON posts.userId = users.userId WHERE users.userId = '" . $pageUser . "' order by posted desc;");
-        ?></div>
+        <div class="posts">
+            <nav>
+                <h1>Blob</h1>
+                <div class="sorting">
+                    <button data-sort="likes"><?php echo file_get_contents('../img/icons/heart.svg'); ?></button>
+                    <button data-sort="posted"><?php echo file_get_contents('../img/icons/calendar.svg'); ?></button>
+                </div>
+            </nav>
+            <?php
+                $sortBy = "posted";
+                if (isset($queries["sort"])) {
+                    $sortBy = $queries["sort"];
+                    echo "<script>document.querySelector(`.sorting [data-sort]:not([data-sort='".$sortBy."'])`).style.opacity = '.8'</script>";
+                }
+                echo addPostsHtml("SELECT posts.postId, posts.text, posts.posted, users.userId, users.userName, users.profilePic, count(likes.postId) as likes
+                    from posts join users on posts.userId = users.userId left join likes on posts.postId = likes.postId where users.userId = '" . $pageUser . "'
+                    group by posts.postId order by ".$sortBy." desc;", "../");
+            ?>
+        </div>
 
         <?php
-            if(isset($_POST['log_out'])) {
-                setcookie("user", "", time() - (86400 * 12), "/");
-                header("Location: ../");
-            }
-            if(isset($_POST['delete_user'])) {
-                $conn->query("delete from posts where userId = '". $pageUser ."';");
-                $conn->query("delete from users where userId = '". $pageUser ."';");
-                setcookie("user", "", time() - (86400 * 12), "/");
-                header("Location: ../");
-            }
             if (isset($_COOKIE["user"]) && $pageUser == $_COOKIE["user"]) {
                 echo '<form method="post" class="userAdminBtns">
                     <input class="btn1 sign_out" type="submit" name="log_out" value="Sign Out"/>
                     <input class="btn1 delete" type="submit" name="delete_user" value="Delete User"/>
                 </form>';
-            }
+            };
         ?>
         
     </section>

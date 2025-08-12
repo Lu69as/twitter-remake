@@ -1,8 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&display=swap');
 
 html { scroll-behavior: smooth; }
 
 :root {
+    --logo-font: "Cherry Bomb One", system-ui;
     --header-font: "Inter", sans-serif;
     --body-font: "Lato", sans-serif;
 
@@ -164,18 +166,59 @@ section.mainWidget {
         }
     }
 
+    
     .posts {
         margin-top: 35px;
         display: flex;
         flex-direction: column;
         gap: 15px;
-
+        
         border: solid 1px var(--post-border);
         background: var(--post-bg);
         border-radius: 10px;
         width: calc(100% - 0px);
         overflow: hidden;
         
+        nav {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 15px;
+            border-bottom: solid 1px var(--post-border);
+
+            h1 {
+                font-family: var(--logo-font);
+                color: var(--primary);
+                font-size: 40px;
+                line-height: 34px;
+            }
+        }
+        .sorting {
+            display: flex;
+            justify-content: end;
+            gap: 5px;
+    
+            > button {
+                background: transparent;
+                border: none;
+                cursor: pointer;
+    
+                text-align: center;
+                font-size: 12px;
+                font-weight: 900;
+    
+                svg, svg * {
+                    height: 30px;
+                    width: 32px;
+                    fill: #e9f6e9;
+                }
+            }
+            > button:hover {
+                opacity: .6 !important;
+            }
+        }
+
+        .post:nth-child(1) { padding-top: 0; }
         .post { 
             padding: 15px;
             display: flex;
@@ -221,6 +264,7 @@ section.mainWidget {
                         stroke-width: 18px;
                     }
                 }
+                > button:hover svg { filter: brightness(.7); }
                 .hasLiked svg {
                     fill: var(--primary);
                     stroke: var(--primary);

@@ -3,13 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" sizes="180x180" href="./img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="./img/favicon/site.webmanifest">
+
     <link rel="stylesheet" href="./style.css">
-    <link rel="icon" type="image/x-icon" href="./img/logo.png">
     <title>Blob</title>
 </head>
 <?php
     require_once "./queries/functions.php";
     $conn = getDBConnection();
+
+    $queries = array();
+    parse_str($_SERVER['QUERY_STRING'], $queries);
 ?>
 <body>
     <section class="mainWidget">
@@ -61,12 +68,30 @@
                     <p class="characters"><span class="charUsed">0</span> / <span class="maxChar"></span></p>
                 </div>';
             }
+            $sort = "order by posts.posted desc";
+            if(isset($_POST['sortBy_likes'])) {
+            }
+            if(isset($_POST['sortBy_date'])) {
+            }
         ?>
 
-        <div class="posts"><?php
-            echo addPostsHtml("select posts.postId, posts.text, posts.posted, users.userId, users.userName, users.profilePic, count(likes.postId) as likes
-                from posts join users on posts.userId = users.userId left join likes on posts.postId = likes.postId
-                group by posts.postId order by posts.posted desc");
+        <div class="posts">
+            <nav>
+                <h1>Blob</h1>
+                <div class="sorting">
+                    <button data-sort="likes"><?php echo file_get_contents('./img/icons/heart.svg') ?></button>
+                    <button data-sort="posted"><?php echo file_get_contents('./img/icons/calendar.svg') ?></button>
+                </div>
+            </nav>
+            <?php
+                $sortBy = "posted";
+                if (isset($queries["sort"])) {
+                    $sortBy = $queries["sort"];
+                    echo "<script>document.querySelector(`.sorting [data-sort]:not([data-sort='".$sortBy."'])`).style.opacity = '.8'</script>";
+                }
+                echo addPostsHtml("SELECT posts.postId, posts.text, posts.posted, users.userId, users.userName, users.profilePic, count(likes.postId) as likes
+                    from posts join users on posts.userId = users.userId left join likes on posts.postId = likes.postId
+                    group by posts.postId order by ".$sortBy." desc;", "./");
         ?></div>
     </section>
     <script src="./script.js"></script>
