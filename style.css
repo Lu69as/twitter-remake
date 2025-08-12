@@ -6,9 +6,8 @@ html { scroll-behavior: smooth; }
     --header-font: "Inter", sans-serif;
     --body-font: "Lato", sans-serif;
 
-    --primary: #9bd49b;
-    --secondary: #357c5b;
-    --accent: #52b69d;
+    --primary: #a38be4;
+    --secondary: #531be7;
 
     --body-bg: #141317;
     --post-bg: #1e1c24;
@@ -192,12 +191,39 @@ section.mainWidget {
             }
 
             .content {
+                width: 100%;
                 .user {
                     font-family: var(--header-font);
                     margin-bottom: 6px;
 
                     .userName { font-weight: 900; }
                     .userId, .date { opacity: .5; }
+                }
+            }
+            .interactions {
+                display: flex;
+                gap: 15px;
+
+                > button {
+                    background: transparent;
+                    border: none;
+                    cursor: pointer;
+
+                    text-align: center;
+                    font-size: 12px;
+                    font-weight: 900;
+
+                    svg {
+                        height: 30px;
+                        width: 32px;
+                        fill: transparent;
+                        stroke: #e9f6e9;
+                        stroke-width: 18px;
+                    }
+                }
+                .hasLiked svg {
+                    fill: var(--primary);
+                    stroke: var(--primary);
                 }
             }
         }

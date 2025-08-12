@@ -64,8 +64,9 @@
         ?>
 
         <div class="posts"><?php
-            echo addPostsHtml("SELECT posts.postId, posts.text, posts.posted, posts.userId, users.userName, users.profilePic
-                FROM posts JOIN users ON posts.userId = users.userId order by posted desc;");
+            echo addPostsHtml("select posts.postId, posts.text, posts.posted, users.userId, users.userName, users.profilePic, count(likes.postId) as likes
+                from posts join users on posts.userId = users.userId left join likes on posts.postId = likes.postId
+                group by posts.postId order by posts.posted desc");
         ?></div>
     </section>
     <script src="./script.js"></script>
