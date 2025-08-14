@@ -13,6 +13,7 @@ window.addEventListener("load", () => {
         document.querySelector(".post_creator .characters .maxChar").innerHTML = e.getAttribute("maxlength");
         e.addEventListener("input", () => document.querySelector(".post_creator .characters .charUsed").innerHTML = e.value.length );
     });
+    console.log("why?")
 
     document.querySelectorAll("form:is(.sign_up, .log_in)").forEach((e) => {
         checkForm(e);
@@ -25,8 +26,8 @@ window.addEventListener("load", () => {
     document.querySelectorAll('.sorting [data-sort]').forEach((e) => {
         e.addEventListener('click', () => {
             const params = new URLSearchParams(window.location.search);
-            params.set('sort', e.dataset.sort); // add or replace sort
-            window.location.search = params.toString(); // reload with updated query
+            params.set('sort', e.dataset.sort);
+            window.location.search = params.toString();
         });
     });
 

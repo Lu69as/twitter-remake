@@ -4,8 +4,8 @@
 
     if (!empty($_POST['textpost'])) {
         try {
-            $post = $conn->prepare("INSERT INTO posts (text, userId) VALUES (?, ?)");
-            $post->bind_param("ss", $_POST['textpost'], $_POST['postuser']);
+            $post = $conn->prepare("INSERT INTO comments (text, postId, userId) VALUES (?, ?, ?)");
+            $post->bind_param("sss", $_POST['textpost'], $_POST['postid'], $_POST['commentuser']);
             $post->execute(); $post->close();
             header("Location: ".$_SERVER['HTTP_REFERER']);
         }
@@ -15,5 +15,5 @@
             echo '<br><a href="../">Return to homepage</a>';
         }
     }
-    else header("Location: ".$_SERVER['HTTP_REFERER']);
+    else header("Location: ../");
     exit;

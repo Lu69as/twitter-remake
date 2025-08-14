@@ -11,12 +11,12 @@
             $stmt->bind_param("sssss", $_POST['userId'], $_POST['password'], $_POST['userName'], $dsc, $pfp);
             $stmt->execute(); $stmt->close();
             setcookie("user", $_POST['userId'], time() + (86400 * 12), "/");
-            header("Location: {$_SERVER['HTTP_REFERER']}");
+            header("Location: ../");
         }
         catch (mysqli_sql_exception $e) {
             error_log($e->getMessage());
             echo "Something went wrong." . $e->getMessage();
-            echo '<br><a href="'.$_SERVER['HTTP_REFERER'].'">Return to homepage</a>';
+            echo '<br><a href="../">Return to homepage</a>';
         }
     }
     else {
@@ -25,11 +25,11 @@
 
         if ($mainPostsResult->num_rows > 0) {
             setcookie("user", $_POST['userId'], time() + (86400 * 12), "/");
-            header("Location: {$_SERVER['HTTP_REFERER']}");
+            header("Location: ../");
         }
         else { 
             echo "Username or password is incorrect, try again";
-            echo '<br><a href="'.$_SERVER['HTTP_REFERER'].'">Return to homepage</a>';
+            echo '<br><a href="../">Return to homepage</a>';
         }
     }
 

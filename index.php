@@ -69,17 +69,14 @@
                 </div>';
             }
             $sort = "order by posts.posted desc";
-            if(isset($_POST['sortBy_likes'])) {
-            }
-            if(isset($_POST['sortBy_date'])) {
-            }
         ?>
 
-        <div class="posts">
+        <div class="posts_container">
             <nav>
-                <h1>Blob</h1>
+                <h1>Blob - home</h1>
                 <div class="sorting">
-                    <button data-sort="likes"><?php echo file_get_contents('./img/icons/heart.svg') ?></button>
+                    <button data-sort="comment_count"><?php echo file_get_contents('./img/icons/comment.svg') ?></button>
+                    <button data-sort="likes_on_post"><?php echo file_get_contents('./img/icons/heart.svg') ?></button>
                     <button data-sort="posted"><?php echo file_get_contents('./img/icons/calendar.svg') ?></button>
                 </div>
             </nav>
@@ -87,11 +84,14 @@
                 $sortBy = "posted";
                 if (isset($queries["sort"])) {
                     $sortBy = $queries["sort"];
-                    echo "<script>document.querySelector(`.sorting [data-sort]:not([data-sort='".$sortBy."'])`).style.opacity = '.8'</script>";
+                    echo "<script>document.querySelector(`.sorting [data-sort='".$sortBy."']`).style.opacity = '.8'</script>";
                 }
-                echo addPostsHtml("SELECT posts.postId, posts.text, posts.posted, users.userId, users.userName, users.profilePic, count(likes.postId) as likes
-                    from posts join users on posts.userId = users.userId left join likes on posts.postId = likes.postId
-                    group by posts.postId order by ".$sortBy." desc;", "./");
+                echo addPostsHtml("SELECT p.postId, p.text, p.posted, u.userId, u.userName, u.profilePic, (
+                    SELECT COUNT(*) FROM likes l WHERE l.postId = p.postId AND l.commentId IS NULL ) AS likes_on_post, (
+                    SELECT COUNT(*) FROM comments c WHERE c.postId = p.postId) AS comment_count, (
+                    SELECT c.text FROM comments c LEFT JOIN likes l2 ON l2.commentId = c.commentId WHERE c.postId = p.postId
+                    GROUP BY c.commentId ORDER BY COUNT(l2.commentId) DESC, c.posted ASC LIMIT 1 ) AS top_comment_text
+                    FROM posts p JOIN users u ON p.userId = u.userId ORDER BY ".$sortBy." DESC;", "./");
         ?></div>
     </section>
     <script src="./script.js"></script>
