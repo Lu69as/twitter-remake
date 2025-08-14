@@ -52,29 +52,31 @@
                         .' '. date("Y", strtotime($row["created"])) .'</span></h3>
                     <p class="description">'. $row["description"] .'</p>
                 </div>';
-            };
+            }; $sortBy = "posted"; $orderBy = "DESC";
+            if (isset($queries["sort"])) $sortBy = $queries["sort"];
+            if (isset($queries["order"])) $orderBy = $queries["order"];
         ?>
 
         <div class="posts_container">
             <nav>
-                <h1>Blob - user</h1>
+                <h1>Blob - home</h1>
                 <div class="sorting">
-                    <button data-sort="likes"><?php echo file_get_contents('../img/icons/heart.svg'); ?></button>
-                    <button data-sort="posted"><?php echo file_get_contents('../img/icons/calendar.svg'); ?></button>
+                    <button data-sort="comment_count"><?php echo file_get_contents('../img/icons/comment.svg') ?></button>
+                    <button data-sort="likes_on_post"><?php echo file_get_contents('../img/icons/heart.svg') ?></button>
+                    <button data-sort="posted"><?php echo file_get_contents('../img/icons/calendar.svg') ?></button>
+                    <button class="orderBy <?php echo $orderBy ?>"><?php echo file_get_contents('../img/icons/arrow-up-down.svg') ?></button>
                 </div>
             </nav>
             <?php
-                $sortBy = "posted";
-                if (isset($queries["sort"])) {
-                    $sortBy = $queries["sort"];
-                    echo "<script>document.querySelector(`.sorting [data-sort]:not([data-sort='".$sortBy."'])`).style.opacity = '.8'</script>";
-                }
+                echo "<script>document.querySelector(`.sorting [data-sort='".$sortBy."']`).style.opacity = '.8'</script>";
+                echo "<script>document.querySelector(`.sorting .orderBy_".$orderBy."`).style.opacity = '.8'</script>";
+
                 echo addPostsHtml("SELECT p.postId, p.text, p.posted, u.userId, u.userName, u.profilePic, (
                     SELECT COUNT(*) FROM likes l WHERE l.postId=p.postId AND l.commentId IS NULL ) AS likes_on_post, (
                     SELECT COUNT(*) FROM comments c WHERE c.postId=p.postId) AS comment_count, (
                     SELECT c.text FROM comments c LEFT JOIN likes l2 ON l2.commentId=c.commentId WHERE c.postId=p.postId
                     GROUP BY c.commentId ORDER BY COUNT(l2.commentId) DESC, c.posted ASC LIMIT 1 ) AS top_comment_text
-                    FROM posts p JOIN users u ON p.userId=u.userId WHERE u.userId='".$pageUser."' ORDER BY ".$sortBy." DESC;", "../");
+                    FROM posts p JOIN users u ON p.userId=u.userId WHERE u.userId='".$pageUser."' ORDER BY ".$sortBy." ".$orderBy.";", "../");
             ?>
         </div>
 

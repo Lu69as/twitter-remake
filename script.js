@@ -31,6 +31,13 @@ window.addEventListener("load", () => {
         });
     });
 
+    document.querySelectorAll('.sorting .orderBy').forEach((e) => { e.addEventListener('click', () => {
+            const params = new URLSearchParams(window.location.search);
+            params.set('order', e.classList[1] == "ASC" ? "DESC" : "ASC");
+            window.location.search = params.toString();
+        });
+    });
+
     document.querySelectorAll(".login_tabs > div").forEach((e) => { e.addEventListener("click", () => {
         let s = document.querySelector(".login_tabs div:not(."+ e.classList[0] +")");
         e.style.opacity = "1"; s.style.opacity = ".7";

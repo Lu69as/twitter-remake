@@ -60,25 +60,27 @@
                         </div>
                     </form>
                 </div>';
-            }
-        ?><div class="comments_container">
+            } $sortBy = "posted"; $orderBy = "DESC";
+            if (isset($queries["sort"])) $sortBy = $queries["sort"];
+            if (isset($queries["order"])) $orderBy = $queries["order"];
+        ?>
+
+        <div class="posts_container">
             <nav>
-                <h1>Blob - comments</h1>
+                <h1>Blob - home</h1>
                 <div class="sorting">
-                    <button data-sort="likes_count"><?php echo file_get_contents('../img/icons/heart.svg'); ?></button>
-                    <button data-sort="posted"><?php echo file_get_contents('../img/icons/calendar.svg'); ?></button>
+                    <button data-sort="likes_count"><?php echo file_get_contents('../img/icons/heart.svg') ?></button>
+                    <button data-sort="posted"><?php echo file_get_contents('../img/icons/calendar.svg') ?></button>
+                    <button class="orderBy <?php echo $orderBy ?>"><?php echo file_get_contents('../img/icons/arrow-up-down.svg') ?></button>
                 </div>
             </nav>
             <?php
-                $sortBy = "posted";
-                if (isset($queries["sort"])) {
-                    $sortBy = $queries["sort"];
-                    echo "<script>document.querySelector(`.sorting [data-sort]:not([data-sort='".$sortBy."'])`).style.opacity = '.8'</script>";
-                }
+                echo "<script>document.querySelector(`.sorting [data-sort='".$sortBy."']`).style.opacity = '.8';
+                    document.querySelector(`.sorting .orderBy_".$orderBy."`).style.opacity = '.8'</script>";
 
                 $query = "SELECT c.postId, c.commentId, c.text, c.userId, c.posted, u.userName, u.profilePic, COUNT(l.userId) AS likes_count
                     FROM comments c JOIN users u ON c.userId = u.userId LEFT JOIN likes l ON l.commentId = c.commentId
-                    WHERE c.postId = ". $pagePost ." GROUP BY c.commentId ORDER BY ". $sortBy ." DESC;";
+                    WHERE c.postId = ". $pagePost ." GROUP BY c.commentId ORDER BY ".$sortBy." ".$orderBy.";";
                 $result = $conn->query($query);
                 $output = "";
                 if ($result->num_rows > 0) {
