@@ -33,7 +33,7 @@
             exit;
         };
     ?>
-    <title><?php echo $pageUser ?></title>
+    <title>Blob user - <?php echo $pageUser ?></title>
 </head>
 <body>
     <section class="mainWidget">

@@ -74,6 +74,7 @@
                             .file_get_contents($p.'img/icons/heart.svg').'<p>'.$row["likes_on_post"].'</p></button>
                     </form>
                 </div>';
+                if ($result->num_rows == 1) echo '<script>if (document.title.includes("post")) document.title += " '.$row["userId"].' - '.$row["text"].'"</script>';
             };
         } else { $output = '<div class="post">0 results</div>'; }
         return $output;

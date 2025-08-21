@@ -31,7 +31,7 @@
         //     exit;
         // };
     ?>
-    <title><?php echo $pagePost ?></title>
+    <title>Blob post - </title>
 </head>
 <body>
     <section class="mainWidget">
