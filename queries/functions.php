@@ -15,18 +15,18 @@
         if ($diff < 0) return "In the future";
 
         $units = [
-            31536000 => "year",
-            2592000  => "month",
-            86400    => "day",
-            3600     => "hour",
-            60       => "minute",
-            1        => "second"
+            31536000 => "y",
+            2592000  => "m",
+            86400    => "d",
+            3600     => "h",
+            60       => "m",
+            1        => "s"
         ];
 
         foreach ($units as $seconds => $name) {
             if ($diff >= $seconds) {
                 $value = floor($diff / $seconds);
-                return $value . " {$name}" . ($value > 1 ? "s" : "") . " ago";
+                return $value . " {$name}";
             }
         }
     }
@@ -50,10 +50,16 @@
                     <div class="content">
                         <p class="user">
                             <a href="'.$p.'profile/?user='.$row["userId"].'" class="userName">'.$row["userName"].'</a>
-                            <a href="'.$p.'profile/?user='.$row["userId"].'" class="userId">@'.$row["userId"].'</a>
-                            <span class="date"> • '.timeAgo($row["posted"]).'</span>
+                            <a href="'.$p.'profile/?user='.$row["userId"].'" class="userId">@'.$row["userId"].' • </a>
+                            <a class="date">'.timeAgo($row["posted"]).'<span>'.date_format(date_create($row["posted"]), "H:i • d. M Y").'</span></a>
                         </p>
-                        <p class="text">'.str_replace("\n", "<br>", $row["text"]).'</p>';
+                        <p class="text">'.str_replace("\n", "<br>", $row["text"]).'</p>
+                        <p class="blobs">';
+
+
+                foreach (explode('|', $row["blobs"]) as $blob) {
+                    $output .= '<a href="'.$p.'blobs/?blob='.$blob.'">[ '.$blob.' ]</a>';
+                } $output .= '</p>';
 
                 if ($row["comment_count"] > 0) $output .= '<a href="'.$p.'post/?post='.$row["postId"].'" class="topComment">'
                     .file_get_contents($p.'img/icons/down-right-arrow.svg').'<span>'.$row["top_comment_text"].'</span></a>';

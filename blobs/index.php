@@ -15,23 +15,8 @@
         $queries = array();
         parse_str($_SERVER['QUERY_STRING'], $queries);
 
-        if (!isset($_COOKIE["user"]) && !isset($queries["user"])) header("Location: ../");
-        $pageUser = isset($queries["user"]) ? $queries["user"] : $_COOKIE["user"];
-        
-        if(isset($_POST['log_out'])) {
-            setcookie("user", "", time() - (86400 * 12), "/");
-            header("Location: ../");
-            exit;
-        };
-        if(isset($_POST['delete_user'])) {
-            $conn->query("DELETE FROM likes WHERE postId IN (SELECT postId FROM posts WHERE userId='".$pageUser."') or userId='".$pageUser."';");
-            $conn->query("DELETE FROM comments where userId='". $pageUser ."';");
-            $conn->query("DELETE from posts where userId='". $pageUser ."';");
-            $conn->query("DELETE from users where userId='". $pageUser ."';");
-            setcookie("user", "", time() - (86400 * 12), "/");
-            header("Location: ../");
-            exit;
-        };
+        if (!isset($queries["blob"])) header("Location: ../");
+        $pageBlob = $queries["blob"];
     ?>
     <title><?php echo $pageUser ?></title>
 </head>
@@ -39,27 +24,14 @@
     <section class="mainWidget">
         <a class="backBtn btn1" href="../">Back</a>
         <?php
-            $pageUserQuery = "SELECT userName, created, description, profilePic
-                FROM users where userId='". $pageUser ."'";
-            $pageUserResult = $conn->query($pageUserQuery);
-            
-            while($row = $pageUserResult->fetch_assoc()) {
-                $createdDate = date_parse($row["created"]);
-                echo '<div class="profilePage">
-                    <div class="pfp" style="background-image:url('. $row["profilePic"] .')"></div>
-                    <h1 class="userName">'. $row["userName"] .'<span class="userId"> • @'. $pageUser .'</span></h1>
-                    <h3 class="userCreated">Started Blobbing™️<span>'. date("F", strtotime($row["created"]))
-                        .' '. date("Y", strtotime($row["created"])) .'</span></h3>
-                    <p class="description">'. $row["description"] .'</p>
-                </div>';
-            }; $sortBy = "posted"; $orderBy = "DESC";
+            $sortBy = "posted"; $orderBy = "DESC";
             if (isset($queries["sort"])) $sortBy = $queries["sort"];
             if (isset($queries["order"])) $orderBy = $queries["order"];
         ?>
 
-        <div class="posts_container">
+        <div class="posts_container blob_page">
             <nav>
-                <h1>Blob - home</h1>
+                <h1>Blob - <?php echo $pageBlob ?></h1>
                 <div class="sorting">
                     <button data-sort="comment_count"><?php echo file_get_contents('../img/icons/comment.svg') ?></button>
                     <button data-sort="likes_on_post"><?php echo file_get_contents('../img/icons/heart.svg') ?></button>
@@ -78,19 +50,10 @@
                     GROUP BY c.commentId ORDER BY COUNT(l2.commentId) DESC, c.posted ASC LIMIT 1 ) AS top_comment_text,
                     GROUP_CONCAT(b.blobId ORDER BY b.blobId SEPARATOR '|') AS blobs
                     FROM posts p JOIN users u ON p.userId = u.userId LEFT JOIN post_blobs pb ON p.postId = pb.postId
-                    LEFT JOIN blobs b ON pb.blobId = b.blobId WHERE u.userId='".$pageUser."' GROUP BY p.postId ORDER BY ".$sortBy." ".$orderBy, "../");
+                    LEFT JOIN blobs b ON pb.blobId = b.blobId WHERE EXISTS ( SELECT 1 FROM post_blobs pb2 JOIN blobs b2 ON pb2.blobId = b2.blobId 
+                    WHERE pb2.postId = p.postId AND b2.blobId = '".$pageBlob."') GROUP BY p.postId ORDER BY ".$sortBy." ".$orderBy, "../");
             ?>
-        </div>
-
-        <?php
-            if (isset($_COOKIE["user"]) && $pageUser == $_COOKIE["user"]) {
-                echo '<form method="post" class="userAdminBtns">
-                    <input class="btn1 sign_out" type="submit" name="log_out" value="Sign Out"/>
-                    <input class="btn1 delete" type="submit" name="delete_user" value="Delete User"/>
-                </form>';
-            };
-        ?>
-        
+        </div>        
     </section>
     <script src="../script.js"></script>
 </body>

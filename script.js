@@ -13,6 +13,26 @@ window.addEventListener("load", () => {
         document.querySelector(".post_creator .characters .maxChar").innerHTML = e.getAttribute("maxlength");
         e.addEventListener("input", () => document.querySelector(".post_creator .characters .charUsed").innerHTML = e.value.length );
     });
+    
+    document.querySelectorAll(".post_creator .row2 .blobs").forEach((e) => e.addEventListener("keydown", (evt) => {
+        if (evt.key == "Enter") {
+            evt.preventDefault();
+            let inputBlobs = document.querySelector(".post_creator .blobs_selected input");
+            inputBlobs.value += (inputBlobs.value.length > 0 ? "|§" : "§") + e.value + "§";
+
+            let blob = document.createElement("p");
+            blob.addEventListener("click", () => {
+                blob.remove();
+                inputBlobs.value = inputBlobs.value.replace(`§${blob.innerText}§`, "")
+                    .replace("||", "|").replace(/\|$/, '').replace(/^\|/, '');
+            })
+            blob.innerHTML = e.value;
+            document.querySelector(".post_creator .blobs_selected").append(blob);
+            e.value = "";
+        }
+        const regex = /[a-zA-Z0-9]/;
+        if (!regex.test(evt.key) && evt.key !== 'Backspace' && evt.key !== ' ') evt.preventDefault();
+    }))
 
     document.querySelectorAll("form:is(.sign_up, .log_in)").forEach((e) => {
         checkForm(e);

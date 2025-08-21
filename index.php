@@ -55,17 +55,26 @@
                     </form>
                 </div>';
             } else {
-                $activeUserPFPQuery = "SELECT profilePic FROM users where userId = '". $_COOKIE["user"] ."'";
+                $activeUserPFPQuery = "SELECT profilePic FROM users where userId = '".$_COOKIE["user"]."'";
                 $activeUserPFPResult = $conn->query($activeUserPFPQuery);
 
                 echo '<div class="post_creator">
                     <form action="./queries/add-post.php" method="post">
-                        <a href="./profile/?user='.$_COOKIE["user"].'" class="profile" style="background-image:url('. $activeUserPFPResult->fetch_assoc()["profilePic"] .')"></a>
-                        <input type="hidden" name="postuser" id="postuser" value="'. $_COOKIE["user"] .'">
-                        <textarea name="textpost" id="textpost" maxlength="255"></textarea>
-                        <button class="btn1" type="submit">Post</button>
+                        <div class="row1">
+                            <a href="./profile/?user='.$_COOKIE["user"].'" class="profile" style="background-image:
+                                url('.$activeUserPFPResult->fetch_assoc()["profilePic"].')"></a>
+                            <input type="hidden" name="postuser" id="postuser" value="'. $_COOKIE["user"] .'">
+                            <textarea name="textpost" id="textpost" maxlength="255"></textarea>
+                            <button class="btn1" type="submit">Post</button>
+                        </div>
+                        <div class="row2">
+                            <p class="characters"><span class="charUsed">0</span> / <span class="maxChar"></span></p>
+                            <input class="blobs" placeholder="Add blobs to your post!">
+                        </div>
+                        <div class="row3 blobs_selected">
+                            <input name="blobs_selected" type="hidden">
+                        </div>
                     </form>
-                    <p class="characters"><span class="charUsed">0</span> / <span class="maxChar"></span></p>
                 </div>';
             } $sortBy = "posted"; $orderBy = "DESC";
             if (isset($queries["sort"])) $sortBy = $queries["sort"];
@@ -90,8 +99,10 @@
                     SELECT COUNT(*) FROM likes l WHERE l.postId = p.postId AND l.commentId IS NULL ) AS likes_on_post, (
                     SELECT COUNT(*) FROM comments c WHERE c.postId = p.postId) AS comment_count, (
                     SELECT c.text FROM comments c LEFT JOIN likes l2 ON l2.commentId = c.commentId WHERE c.postId = p.postId
-                    GROUP BY c.commentId ORDER BY COUNT(l2.commentId) DESC, c.posted ASC LIMIT 1 ) AS top_comment_text
-                    FROM posts p JOIN users u ON p.userId = u.userId ORDER BY ".$sortBy." ".$orderBy.";", "./");
+                    GROUP BY c.commentId ORDER BY COUNT(l2.commentId) DESC, c.posted ASC LIMIT 1 ) AS top_comment_text,
+                    GROUP_CONCAT(b.blobId ORDER BY b.blobId SEPARATOR '|') AS blobs
+                    FROM posts p JOIN users u ON p.userId = u.userId LEFT JOIN post_blobs pb ON p.postId = pb.postId
+                    LEFT JOIN blobs b ON pb.blobId = b.blobId group by p.postId ORDER BY ".$sortBy." ".$orderBy, "./");
         ?></div>
     </section>
     <script src="./script.js"></script>

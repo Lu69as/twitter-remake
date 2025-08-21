@@ -41,8 +41,10 @@
                 SELECT COUNT(*) FROM likes l WHERE l.postId = p.postId AND l.commentId IS NULL ) AS likes_on_post, (
                 SELECT COUNT(*) FROM comments c WHERE c.postId = p.postId) AS comment_count, (
                 SELECT c.text FROM comments c LEFT JOIN likes l2 ON l2.commentId = c.commentId WHERE c.postId = p.postId
-                GROUP BY c.commentId ORDER BY COUNT(l2.commentId) DESC, c.posted ASC LIMIT 1 ) AS top_comment_text
-                FROM posts p JOIN users u ON p.userId = u.userId WHERE p.postId =".$pagePost, "../");
+                GROUP BY c.commentId ORDER BY COUNT(l2.commentId) DESC, c.posted ASC LIMIT 1 ) AS top_comment_text,
+                GROUP_CONCAT(b.blobId ORDER BY b.blobId SEPARATOR '|') AS blobs
+                FROM posts p JOIN users u ON p.userId = u.userId LEFT JOIN post_blobs pb ON p.postId = pb.postId
+                LEFT JOIN blobs b ON pb.blobId = b.blobId WHERE p.postId =".$pagePost." group by p.postId", "../");
         ?></div><?php
             if(isset($_COOKIE["user"])) {
                 $activeUserPFPQuery = "SELECT profilePic FROM users where userId = '". $_COOKIE["user"] ."'";
@@ -112,7 +114,7 @@
                             </form>
                         </div>';
                     };
-                } else { echo '<div class="comment">0 results</div>'; }
+                } else { echo '<p class="comment">There are no comments on this page for now</p>'; }
             ?>
         </div>        
     </section>

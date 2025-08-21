@@ -29,6 +29,6 @@
                 header("Location: ".$_SERVER['HTTP_REFERER']);
             }
         }
+        else header("Location: ".$_SERVER['HTTP_REFERER']); exit;
     }
-    else header("Location: ".$_SERVER['HTTP_REFERER']);
-    exit;
+    else header("Location: ".$_SERVER['HTTP_REFERER']); exit;
