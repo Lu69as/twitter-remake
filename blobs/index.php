@@ -18,18 +18,36 @@
         if (!isset($queries["blob"])) header("Location: ../");
         $pageBlob = $queries["blob"];
     ?>
-    <title><?php echo $pageUser ?></title>
+    <title>Blob - <?php echo $pageBlob ?></title>
 </head>
 <body>
     <section class="mainWidget">
         <a class="backBtn btn1" href="../">Back</a>
         <?php
+            if(isset($_COOKIE["user"])) {
+                $activeUserPFPQuery = "SELECT profilePic FROM users where userId = '".$_COOKIE["user"]."'";
+                $activeUserPFPResult = $conn->query($activeUserPFPQuery);
+
+                echo '<div class="post_creator blob_page">
+                    <form action="../queries/add-post.php" method="post">
+                        <a href="../profile/?user='.$_COOKIE["user"].'" class="profile" style="background-image:
+                            url('.$activeUserPFPResult->fetch_assoc()["profilePic"].')"></a>
+                        <input type="hidden" name="postuser" id="postuser" value="'. $_COOKIE["user"] .'">
+                        <textarea name="textpost" id="textpost" maxlength="255" placeholder="Post to this blob"></textarea>
+                        <div class="btnTxt">
+                            <button class="btn1" type="submit">Post</button>
+                            <p class="characters"><span class="charUsed">0</span> / <span class="maxChar"></span></p>
+                        </div>
+                        <input name="blobs_selected" type="hidden" value="'.$pageBlob.'">
+                    </form>
+                </div>';
+            }
             $sortBy = "posted"; $orderBy = "DESC";
             if (isset($queries["sort"])) $sortBy = $queries["sort"];
             if (isset($queries["order"])) $orderBy = $queries["order"];
         ?>
 
-        <div class="posts_container blob_page">
+        <div class="posts_container">
             <nav>
                 <h1>Blob - <?php echo $pageBlob ?></h1>
                 <div class="sorting">

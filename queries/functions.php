@@ -78,4 +78,3 @@
         } else { $output = '<div class="post">0 results</div>'; }
         return $output;
     }
-

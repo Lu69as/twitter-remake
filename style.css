@@ -71,6 +71,10 @@ section.mainWidget {
         left: 0px;
         transform: translateX(-120%);
     }
+    .backBtn:has(+ .blob_page form) { 
+        top: 15px;
+        transform: translateX(-210%);
+    }
 
 
     /* Styling for login / sign up form */
@@ -222,14 +226,12 @@ section.mainWidget {
         margin-top: 15px;
         transform: translateX(27px) !important;
         width: calc(100% - 88px) !important;
-
-        .btnTxt { text-align: center; }
     }
+    .btnTxt { text-align: center; }
 
     
     /* Posts & Comments containers */
     .comments_container { margin-top: 25px !important; }
-    .posts_container.blob_page { margin-top: 0 !important; }
     .posts_container, .comments_container {
         margin-top: 35px;
         display: flex;
