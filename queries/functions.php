@@ -50,7 +50,7 @@
                     <div class="content">
                         <p class="user">
                             <a href="'.$p.'profile/?user='.$row["userId"].'" class="userName">'.$row["userName"].'</a>
-                            <a href="'.$p.'profile/?user='.$row["userId"].'" class="userId">@'.$row["userId"].' • </a>
+                            <a href="'.$p.'profile/?user='.$row["userId"].'" class="userId">@'.$row["userId"].'</a><b class="dot"> • </b>
                             <a class="date">'.timeAgo($row["posted"]).'<span>'.date_format(date_create($row["posted"]), "H:i • d. M Y").'</span></a>
                         </p>
                         <p class="text">'.str_replace("\n", "<br>", $row["text"]).'</p>

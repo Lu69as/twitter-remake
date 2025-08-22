@@ -47,7 +47,7 @@
             if (isset($queries["order"])) $orderBy = $queries["order"];
         ?>
 
-        <div class="posts_container">
+        <div class="posts_container fromBlob">
             <nav>
                 <h1>Blob - <?php echo $pageBlob ?></h1>
                 <div class="sorting">

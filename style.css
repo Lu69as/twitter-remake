@@ -232,6 +232,9 @@ section.mainWidget {
     
     /* Posts & Comments containers */
     .comments_container { margin-top: 25px !important; }
+    .posts_container.fromBlob { margin-top: 0px; }
+    .blob_page + .posts_container { margin-top: 35px !important; }
+
     .posts_container, .comments_container {
         margin-top: 35px;
         display: flex;
@@ -256,6 +259,7 @@ section.mainWidget {
                 color: var(--primary);
                 font-size: 40px;
                 line-height: 34px;
+                text-wrap: wrap;
             }
         }
         .sorting {
@@ -306,12 +310,13 @@ section.mainWidget {
             .user {
                 font-family: var(--header-font);
                 margin-bottom: 6px;
+                gap: 6px;
 
-                .userName { font-weight: 900; }
-                .userId, .date { 
+                .userName { font-weight: 900;}
+                .userId, .dot, .date {
+                    text-wrap: nowrap;
                     color: #fff7;
                     cursor: pointer;
-                    position: relative;
                 }
                 .date > span { 
                     background: var(--btn-clr);
@@ -346,7 +351,13 @@ section.mainWidget {
                     stroke-width: 18px;
                     opacity: .8;
                 }
-                > span { transform: translateY(-.5px); }
+                > span { 
+                    transform: translateY(-.5px);
+                    overflow: hidden;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 1;
+                    -webkit-box-orient: vertical;
+                }
             }
             .blobs:has(a) {
                 display: flex;
@@ -492,13 +503,43 @@ section.mainWidget {
 }
 
 
-/* Specialized / fix-up styling for tablet / medium width devices */
-@media (max-width: 1050px) {
-
-}
-
-
 /* Specialized / fix-up styling for mobile / small width devices */
 @media (max-width: 730px) {
+    .login_select form > div { flex-direction: column; }
+    .login_select form button { width: 100%; }
 
+    .post_creator :is(form:not(:has(.row1)), form .row1) {
+        transform: none !important;
+
+        textarea { min-width: calc(100% - 180px) !important; }
+    }
+
+    .posts_container nav {
+        flex-direction: column;
+        align-items: center;
+        > * { width: max-content; }
+    }
+
+    .post { align-items: center; }
+    .post .interactions { 
+        flex-direction: column-reverse; 
+        gap: 10px !important;
+
+        svg { 
+            height: 16px !important;
+            width: 18px !important;
+            stroke-width: 28px !important;
+        }
+    }
+    .post .topComment { display: none !important; }
+
+    section.mainWidget .backBtn {
+        left: initial !important;
+        transform: none !important;
+        right: 20px;
+    }
+
+    .mainPost .interactions { margin-right: 100px; }
+
+    section.mainWidget:has(.blob_page) .backBtn { top: 130px !important; }
 }

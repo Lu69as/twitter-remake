@@ -69,7 +69,7 @@
 
         <div class="posts_container">
             <nav>
-                <h1>Blob - home</h1>
+                <h1>Blob - comments</h1>
                 <div class="sorting">
                     <button data-sort="likes_count"><?php echo file_get_contents('../img/icons/heart.svg') ?></button>
                     <button data-sort="posted"><?php echo file_get_contents('../img/icons/calendar.svg') ?></button>
