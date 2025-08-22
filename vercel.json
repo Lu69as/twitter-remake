@@ -1,8 +1,5 @@
 {
-  "version": 2,
-  "functions": {
-    "queries/*.php": { "runtime": "vercel-php@0.5.2" }
-  },
+  "version": 2
   "routes": [
     {
       "src": "/index.php",
