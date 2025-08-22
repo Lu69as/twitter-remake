@@ -6,7 +6,7 @@
   "routes": [
     {
       "src": "/index.php",
-      "headers": { "Location": "/" },
+      "headers": { "Location": "/" }
     },
     {
       "src": "/public/(.*)",
